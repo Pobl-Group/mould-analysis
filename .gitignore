@@ -1,0 +1,15 @@
+/bin
+/include
+/lib
+/lib64
+/share
+/build
+/Scripts
+/dist
+
+pyodbc.pyi
+pyvenv.cfg
+*.log
+*.egg-info
+*.csv
+__pycache__
