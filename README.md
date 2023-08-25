@@ -16,7 +16,7 @@
 <h3 align="center">Mould Analysis</h3>
 
   <p align="center">
-    project_description
+    A tool for assessing whether a job description contains an exact or partial match for key words associated with damp or mould.
     <br />
     <a href="https://github.com/Pobl-Group/mould-analysis/issues">Report Bug</a>
     ·
@@ -48,7 +48,10 @@
 <!-- ABOUT THE PROJECT -->
 ## About the Project
 
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `Pobl-Group`, `mould-analysis`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
+This tool was designed to allow us to find damp and mould related words within job descriptions. When provided with a job description, the algorithm will return a series of scores that indicate whether there is a word in the description that is an exact or partial match for the one of keywords provided.
+We have included the ability to adjust the keywords that are searched for to suit your organisation’s needs. We also allow for the removal of “stop words” which are words that are to be removed from job descriptions to prevent instances of false positives.
+
+**Note:** where an exact match is not found, the scores can only say that there *might* be a match. Like many algorithms, there is a trade off between being too precise (and reducing false positives as much as possible) and flexible enough to be useful (and capture instances where our confidence level might be slightly lower). To get the most out of the algorithm, we suggest experimenting by altering the key words and stop words and then examining the scores returned to check that the configuration works for your organisation.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -80,9 +83,33 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+### Data preparation
+The best way to use this tool, is to provide one row per job and to assemble a description by combining all known descriptions for that job into one. For example, a job may involve multiple tasks and so, you may wish to combine the overall job description with the descriptions of each task related to that job.
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+It is worth noting that before producing the scores, the program will first standardise the descriptions by converting them to lower case and removing punctuation, numbers and extra spaces.
+
+### Key words
+You need to specify a set of lower case keywords that would suggest the job is related to damp or mould. You should try to pick words that are only used when describing a job to remedy damp or mould. Besides from the obvious inclusion of “damp” and “mould”, consider adding names of treatments or tasks associated with removing damp and mould.
+
+### Stop words
+To reduce false positives, it is a good idea to remove certain words from the job descriptions to make the scoring process as reliable as possible. There may be words that are similar to a key word but that have different meanings, like “moulding” which may be unlikely to feature as a description of mould in a property but might be used to describe the fact that the mouldings around a window are cracked.
+
+### The Scores
+Once the program has run, several scores will be produced.
+
+**one_to_one_ratio:** this is a simple ratio score from “thefuzz” library. It checks the similarity between each of the words in the description with each of the key words. After these comparisons are made, the highest score is returned.  The higher the score, the better the match there is between a key word and a word in the description. A score of 100 represents an exact match.
+
+**set_ratio:** this is the partial token set ratio from “thefuzz” library. This function appears to have been deprecated in the latest version of thefuzz but we have left this in place for you to examine the output.
+
+**min_levenshtien_score:** this is the minimum levenshtien distance found when comparing each word in the job description with each of the keywords. The levenshtien distance is essentially a measure of the number of steps required to change one word to another. This also known as the “edit distance”. Unlike the other scores, the lower the levenshtien distance the better.
+
+**simple_search:** this is a simple comparison between each word in the description and each of the keywords. It will return a score of 100 when an exact match is found, otherwise it will return a score of 0.
+
+**best_score:** this is the best score returned out of the one_to_one_ratio, set_ratio and simple_search.
+
+### Interpreting the scores
+We suggest you examine the output and familiarise yourself with the scores returned. We have used the one_to_one ratio score and the simple search scores mostly. We have chosen to view a one_to_one score of 85 or higher as a suitable match for a key word, however you may wish to adjust this based on your needs.
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
